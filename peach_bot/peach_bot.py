@@ -31,7 +31,24 @@ async def hello(ctx: lightbulb.Context) -> None:
 @lightbulb.command("ext", "Make the bot say an extended hello.")
 @lightbulb.implements(lightbulb.PrefixSubCommand)
 async def bar(ctx: lightbulb.Context) -> None:
-  await ctx.respond("Hello, my name is PeachBot!")
+  await ctx.respond("```Hello, my name is PeachBot!```")
+
+@bot.command()
+@lightbulb.command("valo", "Request a group for valorant.")
+@lightbulb.implements(lightbulb.PrefixCommand, lightbulb.SlashCommand)
+async def valo(ctx: lightbulb.Context) -> None:
+  embed = (
+    hikari.Embed(
+      title=f"Valorant (Unrated)",
+      colour=0x3B9DFF,
+    )
+    .set_footer(
+      text=f"Requested by {ctx.member.display_name}",
+      icon=ctx.member.avatar_url or ctx.member.default_avatar_url
+    )
+  )
+
+  await ctx.respond(embed)
 
 def run() -> None:
   if os.name != "nt":
