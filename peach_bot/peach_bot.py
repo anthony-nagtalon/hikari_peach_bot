@@ -1,4 +1,5 @@
 import os
+import logging
 import hikari
 import lightbulb
 
@@ -7,7 +8,8 @@ bot = lightbulb.BotApp(
   prefix="!",
   intents=hikari.Intents.ALL,
   default_enabled_guilds=int(os.environ["TEST_GUILD_ID"]),
-  help_slash_command=True
+  help_slash_command=True,
+  logs="INFO"
 )
 
 @bot.command()
@@ -18,6 +20,18 @@ bot = lightbulb.BotApp(
 @lightbulb.implements(lightbulb.SlashCommand)
 async def cmd_say(ctx: lightbulb.SlashContext) -> None:
   await ctx.respond(ctx.options.text)
+
+@bot.command()
+@lightbulb.command("hello", "Make the bot say hello.")
+@lightbulb.implements(lightbulb.PrefixCommandGroup)
+async def hello(ctx: lightbulb.Context) -> None:
+  await ctx.respond("Hello!")
+
+@hello.child()
+@lightbulb.command("ext", "Make the bot say an extended hello.")
+@lightbulb.implements(lightbulb.PrefixSubCommand)
+async def bar(ctx: lightbulb.Context) -> None:
+  await ctx.respond("Hello, my name is PeachBot!")
 
 def run() -> None:
   if os.name != "nt":
